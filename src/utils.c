@@ -25,3 +25,14 @@ int	ft_atoi(const char *nptr)
 	}
 	return (positive * sum);
 }
+
+int ft_time(struct timeval tv1)
+{
+	struct timeval tv2;
+	sleep(1);
+	gettimeofday(&tv2, NULL);
+
+	printf ("%f some shit to do\n",
+         (double) (tv2.tv_usec - tv1.tv_usec) / 1000000 +
+         (double) (tv2.tv_sec - tv1.tv_sec));
+}

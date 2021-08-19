@@ -15,7 +15,10 @@ typedef struct s_philo
     int die;
     int sleep;
     int must_eat;
-
+    int cur_time;
 }   t_philo;
+
+int ft_time(struct timeval tv1);
+int	ft_atoi(const char *nptr);
 
 #endif
