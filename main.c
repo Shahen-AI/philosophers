@@ -1,45 +1,75 @@
 #include "philo.h"
 
-int philo_init(int argc, char **argv, t_philo *philo)
+int parsing(int argc, char **argv)
 {
-	philo->num = ft_atoi(argv[1]);
-	philo->die = ft_atoi(argv[2]);
-	philo->eat = ft_atoi(argv[3]);
-	philo->sleep = ft_atoi(argv[4]);
+	if (argc != 5 && argc != 6)
+	{
+		printf("Argument Error.\n");
+		printf("Usage : ./philo ");
+		printf("[number_of_philosophers] ");
+		printf("[time_to_die] ");
+		printf("[time_to_eat] ");
+		printf("[time_to_sleep] ");
+		printf("if necessary : [number_of_times_each_philosopher_must_eat]\n");
+		return (1);
+	}
+	philo_init(argc, argv);
+	return (0);
+}
+
+int philo_init(int argc, char **argv)
+{
+	g_glob.num = ft_atoi(argv[1]);
+	g_glob.die = ft_atoi(argv[2]);
+	g_glob.eat = ft_atoi(argv[3]);
+	g_glob.sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		philo->must_eat = ft_atoi(argv[5]);
+		g_glob.must_eat = ft_atoi(argv[5]);
 	return (argc);
 }
 
-void *perform_work(void *arguments, t_philo *philo)
+void *philo_start(void *nm)
 {
-	int index = *((int *)arguments);
-	int sleep_time = 1 + rand() % philo->num;
-	printf("THREAD %d: Started.\n", index);
-	printf("THREAD %d: Will be sleeping for %d seconds.\n", index, sleep_time);
-	sleep(sleep_time);
-	printf("THREAD %d: Ended.\n", index);
-	return (arguments);
+	int i = *((int *)nm) + 1;
+
+	printf("%d %d is thinking\n", ft_time(), i);
+	pthread_mutex_lock(&g_mutex[i].fork);
+	printf("%d %d has taken a fork\n", ft_time(), i);
+	usleep(g_glob.eat);
+	printf("%d %d is sleeping\n", ft_time(), i);
+	usleep(g_glob.sleep);
+	pthread_mutex_unlock(&g_mutex[i].fork);
+	return (0);
 }
 
 int main(int argc, char **argv)
 {
-	t_philo philo;
+	int i = 0, res;
 
-	if (argc != 5 && argc != 6)
+	if (parsing(argc, argv))
 		return (0);
-	philo_init(argc, argv, &philo);
-
-	struct timeval tv;
-	pthread_t philo[philo.num];
-	int i = 0, res, thread_args[philo.num];;
-
-	gettimeofday(&tv, NULL);
-	while (i < philo.num)
+	gettimeofday(&g_glob.tv, NULL);
+	philo = malloc(sizeof(*philo) * g_glob.num);
+	g_mutex = malloc(sizeof(*g_mutex) * g_glob.num);
+	while (i < g_glob.num)
 	{
-		printf("IN MAIN: Creating thread %d.\n", i);
-		thread_args[i] = i;
-		res = pthread_create(&philo[i], NULL, perform_work, &thread_args[i]);
+		pthread_mutex_init(&g_mutex[i].fork, NULL);
+		res = pthread_create(&philo[i].thr, NULL, philo_start, (void *)&i);
+		if (res != 0)
+			break ;
+		++i;
+	}
+	// res = pthread_join(philo[1].thr, NULL);
+	i = 0;
+	while (i < g_glob.num)
+	{
+		pthread_mutex_destroy(&g_mutex[i].fork);
+		++i;
+	}
+	i = 0;
+	while (i < g_glob.num)
+	{
+		res = pthread_join(philo[i].thr, NULL);
 		if (res != 0)
 			break ;
 		++i;

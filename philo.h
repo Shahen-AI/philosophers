@@ -8,17 +8,30 @@
 #include <pthread.h>
 #include <assert.h>
 
-typedef struct s_philo
+struct s_mutex
 {
-    int num;
-    int eat;
-    int die;
-    int sleep;
-    int must_eat;
-    int cur_time;
-}   t_philo;
+	pthread_mutex_t fork;
+}		*g_mutex;
 
-int ft_time(struct timeval tv1);
+struct g_globs
+{
+	int num;
+	int eat;
+	int die;
+	int sleep;
+	int must_eat;
+	struct timeval tv;
+}		g_glob;
+
+struct s_philo
+{
+	int cur_time;
+	pthread_t thr;
+}   *philo;
+
+int ft_time();
 int	ft_atoi(const char *nptr);
+int philo_init(int argc, char **argv);
+int parsing(int argc, char **argv);
 
 #endif

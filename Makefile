@@ -1,5 +1,5 @@
 NAME = philo
-SRCS = main.c #${shell "./src/" find -name "*.c"}
+SRCS = main.c ${shell find "./src/" -name "*.c"}
 OBJS = ${SRCS:.c=.o}
 CC = gcc
 RM = rm -rf

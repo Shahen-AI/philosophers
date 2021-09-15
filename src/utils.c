@@ -1,5 +1,19 @@
 #include "../philo.h"
 
+// int ft_strlen(char *str)
+// {
+// 	int len = 0;
+
+// 	while (str[len])
+// 		++len;
+// 	return (len);
+// }
+
+// int ft_error(char *str)
+// {
+// 	write(1, str, ft_strlen(str));
+// }
+
 int	ft_atoi(const char *nptr)
 {
 	int		i;
@@ -26,13 +40,13 @@ int	ft_atoi(const char *nptr)
 	return (positive * sum);
 }
 
-int ft_time(struct timeval tv1)
+int ft_time()
 {
-	struct timeval tv2;
-	sleep(1);
-	gettimeofday(&tv2, NULL);
+	struct timeval t2;
+    int elapsedTime;
 
-	printf ("%f some shit to do\n",
-         (double) (tv2.tv_usec - tv1.tv_usec) / 1000000 +
-         (double) (tv2.tv_sec - tv1.tv_sec));
+    gettimeofday(&t2, NULL);
+    elapsedTime = (t2.tv_sec - g_glob.tv.tv_sec) * 1000.0;
+    elapsedTime += (t2.tv_usec - g_glob.tv.tv_usec) / 1000.0;
+	return (elapsedTime);
 }
