@@ -40,13 +40,10 @@ int	ft_atoi(const char *nptr)
 	return (positive * sum);
 }
 
-int ft_time()
+long long ft_time()
 {
-	struct timeval t2;
-    int elapsedTime;
+	struct timeval t;
 
-    gettimeofday(&t2, NULL);
-    elapsedTime = (t2.tv_sec - g_glob.tv.tv_sec) * 1000.0;
-    elapsedTime += (t2.tv_usec - g_glob.tv.tv_usec) / 1000.0;
-	return (elapsedTime);
+	gettimeofday(&t, NULL);
+	return (t.tv_sec * 1000 + t.tv_usec / 1000);// - g_glob.tv.tv_sec * 1000 + g_glob.tv.tv_usec / 1000);
 }

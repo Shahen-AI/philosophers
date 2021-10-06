@@ -11,6 +11,8 @@
 struct s_mutex
 {
 	pthread_mutex_t fork;
+	pthread_mutex_t message;
+	pthread_mutex_t death;
 }		*g_mutex;
 
 struct g_globs
@@ -20,18 +22,22 @@ struct g_globs
 	int die;
 	int sleep;
 	int must_eat;
+	int *philNum;
+	int *philDeath;
+	int is_dead;
+	long long start;
 	struct timeval tv;
 }		g_glob;
 
 struct s_philo
 {
-	int cur_time;
+	long long last_eat;
 	pthread_t thr;
 }   *philo;
 
-int ft_time();
+long long ft_time();
 int	ft_atoi(const char *nptr);
-int philo_init(int argc, char **argv);
+void philo_init(int argc, char **argv);
 int parsing(int argc, char **argv);
 
 #endif
