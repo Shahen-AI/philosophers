@@ -60,8 +60,8 @@ void	*eating(int i)
 	pthread_mutex_lock(&g_mutex[i - 1].fork);
 	print_event("has taken a fork", i);
 	print_event("is eating", i);
-	if (g_glob.is_dead)
-		return (0);
+	// if (g_glob.is_dead)
+	// 	return (0);
 	philo[i].last_eat = ft_time() - g_glob.start;
 	usleep(g_glob.eat * 1000);
 	if (g_glob.is_dead)
@@ -103,14 +103,13 @@ void *philo_start(void *nm)
 		return (0);
 	if (i % 2 == 0)
 		usleep(1000);
-	while (!g_glob.is_dead)
+	while (1)
 	{
 		print_event("is thinking", i);
 		eating(i);
-		// if (g_glob.is_dead)
-		// 	break ;
+		if (g_glob.is_dead)
+			return (0);
 	}
-	return (0);
 }
 
 int main(int argc, char **argv)
@@ -119,7 +118,6 @@ int main(int argc, char **argv)
 
 	if (parsing(argc, argv))
 		return (0);
-	
 	pthread_mutex_init(&g_mutex[0].message, NULL);
 	while (i < g_glob.num)
 	{
@@ -133,6 +131,8 @@ int main(int argc, char **argv)
 	while (i < g_glob.num)
 	{
 		res = pthread_join(philo[i].thr, NULL);
+		if (g_glob.is_dead)
+			return (0);
 		if (res != 0)
 			break ;
 		++i;
