@@ -12,7 +12,6 @@ struct s_mutex
 {
 	pthread_mutex_t fork;
 	pthread_mutex_t message;
-	pthread_mutex_t death;
 }		*g_mutex;
 
 struct g_globs
@@ -23,7 +22,6 @@ struct g_globs
 	int sleep;
 	int must_eat;
 	int *philNum;
-	int *philDeath;
 	int is_dead;
 	long long start;
 	struct timeval tv;
@@ -31,6 +29,7 @@ struct g_globs
 
 struct s_philo
 {
+	int eat_count;
 	long long last_eat;
 	pthread_t thr;
 }   *philo;
