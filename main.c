@@ -14,10 +14,8 @@
 
 void	*ft_global(void *nm)
 {
-	while (1)
+	while (!g_glob.is_dead)
 	{
-		if (g_glob.is_dead)
-			break ;
 		usleep(50);
 	}
 	return (nm);
