@@ -38,5 +38,8 @@ int	main(int argc, char **argv)
 			philo_start, (void *)&g_glob.phil_num[i]);
 	}
 	pthread_join(glob, NULL);
+	free(g_glob.phil_num);
+	free(philo);
+	free(g_mutex);
 	return (0);
 }
